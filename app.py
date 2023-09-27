@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, jsonify, g
-from flask_cors import CORS  # Step 1: Add the required imports
 import sqlite3
 
 app = Flask(__name__)
-CORS(app)  # Step 2: Apply CORS middleware to the Flask app instance
 
 DATABASE = 'data_collection.db'
 
@@ -18,34 +16,14 @@ def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
-def init_db():
-    with app.app_context():
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS collected_data (
-                id INTEGER PRIMARY KEY,
-                category TEXT,
-                input_data REAL,
-                output_emissions REAL
-            )
-        ''')
-        db.commit()
 
-def insert_data(category, input_data, output_emissions):
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute('INSERT INTO collected_data (category, input_data, output_emissions) VALUES (?, ?, ?)', 
-                   (category, input_data, output_emissions))
-    conn.commit()
+
+# Rest of your database initialization code remains the same...
 
 # Refactored Function with Flask Endpoint
-@app.route('/waste_disposal_emissions', methods=['POST', 'GET'])
+@app.route('/waste_disposal_emissions', methods=['POST'])
 def waste_disposal_emissions():
     data = request.json
-    conn = get_db()
-    cursor = conn.cursor()
-
     age_group = data.get('age_group')
     generated_waste = data.get('generated_waste').lower()
 
@@ -67,10 +45,10 @@ def waste_disposal_emissions():
 
 # You need to refactor other functions in a similar way...
 
-@app.route('/calculate_travel_emissions', methods=['POST', 'GET'])
+@app.route('/calculate_travel_emissions', methods=['POST'])
 def calculate_travel_emissions():
-    data = request.json
-    conn = get_db()
+    data = request.form
+    conn = get_db_connection()
     cursor = conn.cursor()
 
     emission_factors = {
@@ -102,11 +80,10 @@ def calculate_travel_emissions():
     return jsonify(travel_emissions)
 
 
-@app.route('/calculate_energy_emissions', methods=['POST', 'GET'])
+@app.route('/calculate_energy_emissions', methods=['POST'])
 def calculate_energy_emissions():
-    data = request.json
-    conn = get_db()
-    cursor = conn.cursor()
+    data = request.form
+
     usage = data.get('energy_usage').lower()
     energy_emissions_data = {}
 
@@ -133,14 +110,10 @@ def calculate_energy_emissions():
     return jsonify(energy_emissions_data)
 
 
-@app.route('/calculate_diet_emissions', methods=['POST', 'GET'])
+@app.route('/calculate_diet_emissions', methods=['POST'])
 def calculate_diet_emissions():
-    data = request.json
-    data = request.json
-    conn = get_db()
-    cursor = conn.cursor()
+    data = request.form
 
-    
     # Retrieve data from the form
     age_category = data.get('age_category')
     gender = data.get('gender').lower()
@@ -179,7 +152,6 @@ def calculate_diet_emissions():
 
 # Final run of the app
 if __name__ == "__main__":
-    init_db()
     app.run(debug=False)
 
     
