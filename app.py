@@ -21,7 +21,7 @@ def close_connection(exception):
 # Rest of your database initialization code remains the same...
 
 # Refactored Function with Flask Endpoint
-@app.route('/waste_disposal_emissions', methods=['POST'])
+@app.route('/waste_disposal_emissions', methods=['POST', 'GET'])
 def waste_disposal_emissions():
     data = request.json
     age_group = data.get('age_group')
@@ -45,9 +45,9 @@ def waste_disposal_emissions():
 
 # You need to refactor other functions in a similar way...
 
-@app.route('/calculate_travel_emissions', methods=['POST'])
+@app.route('/calculate_travel_emissions', methods=['POST', 'GET'])
 def calculate_travel_emissions():
-    data = request.form
+    data = request.json
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -80,9 +80,9 @@ def calculate_travel_emissions():
     return jsonify(travel_emissions)
 
 
-@app.route('/calculate_energy_emissions', methods=['POST'])
+@app.route('/calculate_energy_emissions', methods=['POST', 'GET'])
 def calculate_energy_emissions():
-    data = request.form
+    data = request.json
 
     usage = data.get('energy_usage').lower()
     energy_emissions_data = {}
@@ -110,9 +110,9 @@ def calculate_energy_emissions():
     return jsonify(energy_emissions_data)
 
 
-@app.route('/calculate_diet_emissions', methods=['POST'])
+@app.route('/calculate_diet_emissions', methods=['POST', 'GET'])
 def calculate_diet_emissions():
-    data = request.form
+    data = request.json
 
     # Retrieve data from the form
     age_category = data.get('age_category')
