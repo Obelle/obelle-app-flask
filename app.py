@@ -50,7 +50,7 @@ def waste_disposal_emissions():
 
 @app.route('/calculate_travel_emissions', methods=['POST'])
 def calculate_travel_emissions():
-    data = request.form
+    data = request.json
 
     emission_factors = {
         'air': 0.440,
