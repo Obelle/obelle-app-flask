@@ -119,13 +119,15 @@ def calculate_energy_emissions():
 
 
 @app.route('/calculate_diet_emissions', methods=['POST'])
-def calculate_diet_emissions():
-    data = request.form
+from flask import request, jsonify
 
-    # Retrieve data from the form
+def calculate_diet_emissions():
+    data = request.json
+
+    # Retrieve data from the JSON
     age_category = data.get('age_category')
-    gender = data.get('gender').lower()
-    diet_type = data.get('diet_type').lower()
+    gender = data.get('gender', '').lower()
+    diet_type = data.get('diet_type', '').lower()
 
     # Caloric values and conversion factors
     caloric_values = {
@@ -149,12 +151,12 @@ def calculate_diet_emissions():
         user_input = caloric_values[age_category][gender]
         conversion_factor = conversion_factors[diet_type]
         output_emissions = user_input * conversion_factor
-        # Here, insert_data() function should be modified to use Flask SQLAlchemy or another database connector compatible with Flask
+        # Here, the insert_data() function should be modified to use Flask SQLAlchemy or another database connector compatible with Flask
         # insert_data(diet_type + '_emissions', user_input, output_emissions)
 
         return jsonify({'emissions': output_emissions})
 
-    return "Invalid input.", 400
+    return jsonify({'error': "Invalid input."}), 400
 
 
 
