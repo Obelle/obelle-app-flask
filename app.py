@@ -62,23 +62,28 @@ def calculate_travel_emissions():
     travel_emissions = {}
 
     for travel_type, factor in emission_factors.items():
-        user_response = data.get(f"{travel_type}_travel").lower()
+        user_response = data.get(f"{travel_type}_travel", "no").lower()
 
         if user_response == 'yes':
-            distance = float(data.get(f"{travel_type}_distance"))
+            distance = float(data.get(f"{travel_type}_distance", 0))  # default to 0 if not provided
             emissions = distance * factor
             travel_emissions[travel_type] = emissions
             total_emissions += emissions
-            cursor.execute('INSERT INTO collected_data (category, input_data, output_emissions) VALUES (?, ?, ?)',
-                           (travel_type + '_travel_emissions', distance, emissions))
-            conn.commit()
-        elif user_response == 'no':
+            
+            # Assuming you have cursor and conn set up somewhere in your code
             #cursor.execute('INSERT INTO collected_data (category, input_data, output_emissions) VALUES (?, ?, ?)',
-                           #(travel_type + '_travel_emissions', 0, 0))
+            #               (travel_type + '_travel_emissions', distance, emissions))
             #conn.commit()
 
-        travel_emissions['total'] = total_emissions
-        return jsonify(travel_emissions)
+        elif user_response == 'no':
+            # If you want to store 'no' responses in the future, uncomment below:
+            #cursor.execute('INSERT INTO collected_data (category, input_data, output_emissions) VALUES (?, ?, ?)',
+            #               (travel_type + '_travel_emissions', 0, 0))
+            #conn.commit()
+            pass
+
+    travel_emissions['total'] = total_emissions
+    return jsonify(travel_emissions)
 
 
 @app.route('/calculate_energy_emissions', methods=['POST'])
