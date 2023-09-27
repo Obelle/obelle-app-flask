@@ -119,8 +119,6 @@ def calculate_energy_emissions():
 
 
 @app.route('/calculate_diet_emissions', methods=['POST'])
-from flask import request, jsonify
-
 def calculate_diet_emissions():
     data = request.json
 
