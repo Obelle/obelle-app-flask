@@ -25,7 +25,7 @@ def close_connection(exception):
 def waste_disposal_emissions():
     data = request.json
     age_group = data.get('age_group')
-    generated_waste = data.get('generated_waste').lower()
+    generated_waste = data.get('generated_waste', '').lower()
 
     age_groups = {
         "Below 18 to 30": 30,
