@@ -73,9 +73,9 @@ def calculate_travel_emissions():
                            (travel_type + '_travel_emissions', distance, emissions))
             conn.commit()
         elif user_response == 'no':
-            cursor.execute('INSERT INTO collected_data (category, input_data, output_emissions) VALUES (?, ?, ?)',
-                           (travel_type + '_travel_emissions', 0, 0))
-            conn.commit()
+            #cursor.execute('INSERT INTO collected_data (category, input_data, output_emissions) VALUES (?, ?, ?)',
+                           #(travel_type + '_travel_emissions', 0, 0))
+            #conn.commit()
 
     travel_emissions['total'] = total_emissions
     return jsonify(travel_emissions)
