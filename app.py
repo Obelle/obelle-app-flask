@@ -34,12 +34,12 @@ def waste_disposal_emissions():
     }
 
     if generated_waste == 'yes':
-        waste_weight = age_groups.[age_group]
+        waste_weight = age_groups.get(age_group, 0)
     else:
         waste_weight = 0
 
     output_emissions = waste_weight * 0.700
-    #insert_data('waste_disposal_emissions', waste_weight, output_emissions)
+    insert_data('waste_disposal_emissions', waste_weight, output_emissions)
     
     return jsonify({"emissions": output_emissions})
 
