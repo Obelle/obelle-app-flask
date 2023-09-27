@@ -77,8 +77,8 @@ def calculate_travel_emissions():
                            #(travel_type + '_travel_emissions', 0, 0))
             #conn.commit()
 
-    travel_emissions['total'] = total_emissions
-    return jsonify(travel_emissions)
+        travel_emissions['total'] = total_emissions
+        return jsonify(travel_emissions)
 
 
 @app.route('/calculate_energy_emissions', methods=['POST'])
