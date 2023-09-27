@@ -34,7 +34,7 @@ def waste_disposal_emissions():
     }
 
     if generated_waste == 'yes':
-        waste_weight = age_groups.get(age_group, 0)
+        waste_weight = age_groups.get(age_group)
     else:
         waste_weight = 0
 
