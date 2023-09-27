@@ -17,6 +17,12 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+def insert_data(category, input_data, output_emissions):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO collected_data (category, input_data, output_emissions) VALUES (?, ?, ?)', 
+                   (category, input_data, output_emissions))
+    conn.commit()
 
 # Rest of your database initialization code remains the same...
 
