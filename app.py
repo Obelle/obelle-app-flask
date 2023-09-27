@@ -88,30 +88,32 @@ def calculate_travel_emissions():
 
 @app.route('/calculate_energy_emissions', methods=['POST'])
 def calculate_energy_emissions():
-    data = request.form
+    data = request.json
 
-    usage = data.get('energy_usage').lower()
+    energy_usage = data.get('energy_usage', 'no').lower()
     energy_emissions_data = {}
 
-    if usage == 'yes':
-        electricity_bill = float(data.get('electricity_bill'))
+    if energy_usage == 'yes':
+        electricity_bill = float(data.get('electricity_bill', 0))
         electricity_emissions = electricity_bill * 0.685294118
         energy_emissions_data['electricity'] = electricity_emissions
 
-        gas_meter_type = data.get('gas_meter_type').lower()
+        gas_meter_type = data.get('gas_meter_type', '').lower()
 
         if gas_meter_type in ['imperial', 'metric']:
-            gas_bill = float(data.get('gas_bill'))
+            gas_bill = float(data.get('gas_bill', 0))
             gas_emissions_factor = 6.4434483 if gas_meter_type == 'imperial' else 6.4484259
             gas_emissions = gas_bill * gas_emissions_factor
             energy_emissions_data['gas'] = gas_emissions
         else:
-            return "Invalid meter type selected.", 400
+            energy_emissions_data['error'] = "Invalid meter type selected."
+            return jsonify(energy_emissions_data), 400
 
-    elif usage == 'no':
+    elif energy_usage == 'no':
         energy_emissions_data['message'] = "No emissions calculated as no energy was used."
     else:
-        return "Invalid selection. Please enter 'yes' or 'no'.", 400
+        energy_emissions_data['error'] = "Invalid selection. Please enter 'yes' or 'no'."
+        return jsonify(energy_emissions_data), 400
 
     return jsonify(energy_emissions_data)
 
