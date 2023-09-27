@@ -33,8 +33,11 @@ def waste_disposal_emissions():
         "51 and above": 24
     }
 
+    # DEBUG: Print the received age group for verification
+    print("Received age group:", age_group)
+
     if generated_waste == 'yes':
-        waste_weight = age_groups.get(age_group)
+        waste_weight = age_groups.get(age_group, 0)
     else:
         waste_weight = 0
 
